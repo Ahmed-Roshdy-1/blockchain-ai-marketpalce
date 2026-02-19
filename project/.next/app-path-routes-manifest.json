@@ -1,0 +1,12 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/dashboard/page": "/dashboard",
+  "/favicon.ico/route": "/favicon.ico",
+  "/marketplace/page": "/marketplace",
+  "/models/[slug]/page": "/models/[slug]",
+  "/page": "/",
+  "/pricing/page": "/pricing",
+  "/sign-up/page": "/sign-up",
+  "/upload/page": "/upload"
+}

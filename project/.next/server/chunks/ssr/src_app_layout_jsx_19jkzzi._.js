@@ -1,0 +1,3 @@
+module.exports=[49575,a=>{"use strict";var b=a.i(7997);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"en",className:"h-full antialiased",children:(0,b.jsx)("body",{className:"flex min-h-full flex-col bg-bg text-text",children:a})})},"metadata",0,{title:"NuvyraHub — AI Model Marketplace",description:"Own, deploy, and monetize the world's finest AI models. Decentralized compute meets cryptographic security."}])},62243,a=>{a.n(a.i(49575))}];
+
+//# sourceMappingURL=src_app_layout_jsx_19jkzzi._.js.map

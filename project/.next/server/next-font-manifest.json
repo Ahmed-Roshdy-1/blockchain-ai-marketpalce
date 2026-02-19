@@ -1,0 +1,15 @@
+{
+  "app": {
+    "[project]/src/app/_not-found/page": [],
+    "[project]/src/app/dashboard/page": [],
+    "[project]/src/app/marketplace/page": [],
+    "[project]/src/app/models/[slug]/page": [],
+    "[project]/src/app/page": [],
+    "[project]/src/app/pricing/page": [],
+    "[project]/src/app/sign-up/page": [],
+    "[project]/src/app/upload/page": []
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}
