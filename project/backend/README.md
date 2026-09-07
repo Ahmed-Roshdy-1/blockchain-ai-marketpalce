@@ -36,7 +36,7 @@ If the Hardhat node is down, catalog and auth still work; acquire falls back to 
 | GET | `/api/tags` | no | Tag frequencies |
 | GET | `/api/models` | no | List/filter (`category`, `q`, `tag`, `page`, `pageSize`) |
 | GET | `/api/models/:slug` | no | Model detail + related |
-| POST | `/api/models` | Bearer | Publish a model (also lists on-chain when RPC is up) |
+| POST | `/api/models` | Bearer | Save a model before its creator signs the on-chain listing |
 | PATCH | `/api/models/:slug` | Bearer | Update model |
 | DELETE | `/api/models/:slug` | Bearer | Delete model |
 | POST | `/api/models/:slug/acquire` | optional | Relay acquire (on-chain, or simulated if RPC is down) |
@@ -45,7 +45,7 @@ If the Hardhat node is down, catalog and auth still work; acquire falls back to 
 | GET | `/api/chain/status` | no | RPC + marketplace status |
 | GET | `/api/chain/config` | no | Address, chain id, ABI |
 | GET | `/api/chain/listing/:slug` | no | On-chain listing |
-| POST | `/api/chain/list/:slug` | optional | List on-chain (`?mode=tx` for unsigned tx) |
+| POST | `/api/chain/list/:slug` | optional | `relay`, `tx`, or `confirm` a creator-signed listing |
 | POST | `/api/chain/acquire/:slug` | optional | `relay` / `tx` / `confirm` |
 | POST | `/api/auth/signup` | no | Create account |
 | POST | `/api/auth/login` | no | Sign in (demo: auto-provisions unknown emails) |
@@ -61,6 +61,11 @@ If the Hardhat node is down, catalog and auth still work; acquire falls back to 
 { "mode": "tx" }
 { "mode": "confirm", "txHash": "0x…", "walletAddress": "0x…" }
 ```
+
+`POST /api/chain/list/:slug` accepts a matching confirmation body after a
+creator wallet calls `listModel` directly. Include `metadataURI`, `priceEth`,
+and `royaltyBps`; the API verifies the receipt, sender, contract target, and
+`listModel` arguments before storing the wallet as the model creator.
 
 ## Example
 

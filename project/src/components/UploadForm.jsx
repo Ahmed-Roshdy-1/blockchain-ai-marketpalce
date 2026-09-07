@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MetaTag } from "@/components/TagChip";
-import { api, getToken, saveToken } from "@/lib/api";
+import { api, saveToken } from "@/lib/api";
+import { connectBrowserWallet, listModelWithWallet } from "@/lib/contracts";
 
 export function UploadForm() {
   const router = useRouter();
@@ -21,17 +22,11 @@ export function UploadForm() {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
 
-  async function ensureToken() {
-    const existing = getToken();
-    if (existing) return existing;
-    const wallet = await api.wallet(
-      `0x${Math.random().toString(16).slice(2, 6)}...${Math.random()
-        .toString(16)
-        .slice(2, 6)}`,
-      "CREATOR",
-    );
+  async function connectCreatorWallet() {
+    const { address } = await connectBrowserWallet();
+    const wallet = await api.wallet(address, "CREATOR");
     saveToken(wallet.token);
-    return wallet.token;
+    return { address, token: wallet.token };
   }
 
   async function onSubmit(e) {
@@ -40,7 +35,9 @@ export function UploadForm() {
     setError(null);
     setMessage(null);
     try {
-      const token = await ensureToken();
+      // A listing must be signed by the creator's connected wallet. This also
+      // replaces any old session with the session associated with that wallet.
+      const { address, token } = await connectCreatorWallet();
       const res = await api.createModel(
         {
           name,
@@ -50,11 +47,29 @@ export function UploadForm() {
           tags,
           priceEth,
           framework,
-          creator: "@VinciLabs",
+          creator: `@${address.slice(0, 6)}…${address.slice(-4)}`,
         },
         token,
       );
-      setMessage(`Published ${res.model.name}`);
+      const metadataURI = `https://NuvyraHub.local/metadata/${res.model.slug}.json`;
+      const listing = await listModelWithWallet({
+        slug: res.model.slug,
+        metadataURI,
+        priceEth: String(priceEth),
+        royaltyBps: 500,
+      });
+      await api.chainListConfirm(
+        res.model.slug,
+        {
+          txHash: listing.txHash,
+          walletAddress: listing.creator,
+          metadataURI,
+          priceEth,
+          royaltyBps: 500,
+        },
+        token,
+      );
+      setMessage(`Published ${res.model.name} as ${listing.creator.slice(0, 8)}…`);
       router.push(`/models/${res.model.slug}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");

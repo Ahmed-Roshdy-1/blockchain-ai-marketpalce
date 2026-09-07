@@ -256,6 +256,8 @@ function createModel(input) {
     slug,
     name: input.name,
     creator: input.creator,
+    creatorWallet: input.creatorWallet,
+    creatorUserId: input.creatorUserId,
     address: `0x${randomUUID().replace(/-/g, "").slice(0, 4)}...${randomUUID()
       .replace(/-/g, "")
       .slice(0, 4)}`,
