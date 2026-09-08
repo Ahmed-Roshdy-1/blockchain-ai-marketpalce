@@ -78,30 +78,17 @@ modelsRouter.post("/", requireAuth, async (req, res) => {
   }
 
   const data = parsed.data;
+  const creatorWallet = req.user?.walletAddress;
   const model = createModel({
     ...data,
     creator: data.creator || req.user?.email || "@anonymous",
+    creatorWallet,
+    creatorUserId: req.user?.id,
   });
-
-  let onChain = null;
-  try {
-    const { listModelOnChain } = require("../chain/marketplace");
-    onChain = await listModelOnChain({
-      slug: model.slug,
-      metadataURI: `https://NuvyraHub.local/metadata/${model.slug}.json`,
-      priceEth: model.priceEth,
-      royaltyBps: 500,
-    });
-  } catch (error) {
-    onChain = {
-      error: error instanceof Error ? error.message : "chain list skipped",
-    };
-  }
 
   res.status(201).json({
     model,
-    onChain,
-    message: "Model listed on decentralized market",
+    message: "Model saved. Confirm the creator-signed listing to publish it on-chain.",
   });
 });
 

@@ -70,6 +70,12 @@ export const api = {
   chainListing: (slug) => request(`/api/chain/listing/${slug}`),
   chainList: (slug) =>
     request(`/api/chain/list/${slug}`, { method: "POST", body: "{}" }),
+  chainListConfirm: (slug, body, token) =>
+    request(`/api/chain/list/${slug}`, {
+      method: "POST",
+      body: JSON.stringify({ mode: "confirm", ...body }),
+      token,
+    }),
   chainAcquireConfirm: (slug, body) =>
     request(`/api/chain/acquire/${slug}`, {
       method: "POST",
